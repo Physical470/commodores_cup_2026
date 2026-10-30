@@ -1,0 +1,370 @@
+<title>アスナロ レースブリーフ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: chart-table briefing — one narrow column, sticky section nav, instrument-style widgets for wind and time */
+:root{
+  --bg:#eef3f6; --surface:#ffffff; --ink:#0f2433; --muted:#566b79; --line:#cbd8e1;
+  --sea:#1f5f8b; --mark:#e8591a; --mark-soft:#fde6da; --warn-bg:#fff4d6; --warn-ink:#6b4a00;
+  --ok:#1d7a4f;
+  --f-display:"Dela Gothic One","Hiragino Sans","Noto Sans JP",sans-serif;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+  --f-data:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0b1820; --surface:#12232e; --ink:#e4eef4; --muted:#93a9b8; --line:#24394a;
+  --sea:#6db3e3; --mark:#ff7a3d; --mark-soft:#3a2216; --warn-bg:#3a2f12; --warn-ink:#f5d58a; --ok:#5fd29a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1820; --surface:#12232e; --ink:#e4eef4; --muted:#93a9b8; --line:#24394a;
+  --sea:#6db3e3; --mark:#ff7a3d; --mark-soft:#3a2216; --warn-bg:#3a2f12; --warn-ink:#f5d58a; --ok:#5fd29a; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:760px;margin:0 auto}
+header.hero{padding-block:28px 18px;display:grid;gap:6px}
+.eyebrow{font-family:var(--f-data);font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,7vw,44px);line-height:1.2;margin:0;text-wrap:balance}
+h1 small{display:block;font-family:var(--f-body);font-weight:700;font-size:15px;color:var(--sea);margin-top:6px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;color:var(--muted)}
+.meta b{color:var(--ink);font-family:var(--f-data);font-weight:700}
+
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+  margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:8px max(16px,env(safe-area-inset-left,0px));overflow-x:auto;white-space:nowrap}
+nav.toc a{display:inline-block;padding:6px 10px;margin-right:4px;border-radius:999px;color:var(--ink);text-decoration:none;font-size:14px;font-weight:500;border:1px solid var(--line);background:var(--surface)}
+nav.toc a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
+
+section{padding-top:28px;scroll-margin-top:60px}
+h2{font-family:var(--f-display);font-weight:400;font-size:22px;margin:0 0 12px;display:flex;align-items:baseline;gap:10px;text-wrap:balance}
+h2 .no{font-family:var(--f-data);font-size:13px;color:var(--mark)}
+h3{font-size:16px;margin:18px 0 6px}
+p,li{max-width:65ch}
+ul{padding-left:1.2em;margin:6px 0}
+.guess{font-size:12px;color:var(--muted);white-space:nowrap}
+.src{font-family:var(--f-data);font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 4px;white-space:nowrap}
+
+.alert{background:var(--warn-bg);color:var(--warn-ink);border-left:4px solid var(--mark);padding:12px 14px;border-radius:4px;margin-top:8px}
+.alert strong{font-size:17px}
+
+.keys{display:grid;gap:10px;counter-reset:k}
+.key{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr;gap:10px}
+.key::before{counter-increment:k;content:counter(k);font-family:var(--f-data);font-weight:700;color:var(--mark);font-size:18px;line-height:1.5}
+.key div{min-width:0}
+
+.timeline{list-style:none;padding:0;margin:0;border-left:2px solid var(--line)}
+.timeline li{position:relative;padding:4px 0 12px 18px;display:grid;grid-template-columns:5.2em 1fr;gap:10px;max-width:none}
+.timeline li::before{content:"";position:absolute;left:-6px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--sea)}
+.timeline li.hot::before{background:var(--mark);border-color:var(--mark)}
+.timeline time{font-family:var(--f-data);font-weight:700;font-variant-numeric:tabular-nums}
+.timeline li.hot time{color:var(--mark)}
+.timeline li > div{min-width:0}
+
+/* wind instrument */
+.instr{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:14px}
+.instr label{font-size:13px;color:var(--muted)}
+.dirs{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+.dirs button{font-family:var(--f-data);font-size:13px;padding:8px 0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:4px;cursor:pointer}
+.dirs button[aria-pressed="true"]{background:var(--sea);color:var(--surface);border-color:var(--sea)}
+.readout{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.leg{border:1px solid var(--line);border-radius:6px;padding:10px 12px;min-width:0}
+.leg .h{font-size:12px;color:var(--muted)}
+.leg .twa{font-family:var(--f-data);font-size:30px;font-weight:700;line-height:1.2}
+.leg .twa span{font-size:14px;color:var(--muted);font-weight:500}
+.leg .tack{font-size:13px;font-weight:700}
+.leg .sail{font-size:14px;margin-top:4px}
+.flagline{display:flex;align-items:center;gap:10px;font-weight:700;flex-wrap:wrap}
+.flag{display:inline-grid;place-items:center;width:46px;height:28px;border:1px solid var(--ink);clip-path:polygon(0 0,100% 12%,100% 88%,0 100%)}
+.flag i{width:12px;height:12px;border-radius:50%;display:block}
+.flag.f1{background:#fff}.flag.f1 i{background:#e3101b}
+.flag.f2{background:#1430e0}.flag.f2 i{background:#fff}
+.note{font-size:13px;color:var(--muted)}
+
+.course{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cbox{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px;min-width:0}
+.cbox h3{margin-top:0;display:flex;align-items:center;gap:8px}
+.cbox svg{width:100%;height:auto;display:block}
+
+/* rating table */
+.slider{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.slider input{flex:1;min-width:180px;accent-color:var(--mark)}
+.slider output{font-family:var(--f-data);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface);margin-top:10px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-size:12px;color:var(--muted);font-weight:500}
+td.n{font-family:var(--f-data);font-variant-numeric:tabular-nums;text-align:right}
+tr.me td{background:var(--mark-soft);font-weight:700}
+tr.rival td:first-child{font-weight:700}
+.pill{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;border:1px solid currentColor}
+.pill.win{color:var(--ok)}.pill.lose{color:var(--mark)}
+.eyc{font-family:var(--f-data);font-size:11px;color:var(--sea)}
+
+.check{list-style:none;padding:0;display:grid;gap:6px}
+.check label{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px;cursor:pointer}
+.check input{width:20px;height:20px;margin-top:3px;accent-color:var(--ok);flex:none}
+.check input:checked + span{color:var(--muted);text-decoration:line-through}
+footer{margin-top:36px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+
+@media (max-width:520px){
+  .readout,.course{grid-template-columns:1fr}
+  .dirs{grid-template-columns:repeat(4,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <div class="eyebrow">2026 湘南コモドアズカップ · 11/3（火・祝）</div>
+  <h1>アスナロ レースブリーフ<small>J/V35CR · #6737 · EYC · PHRF TCF 0.783</small></h1>
+  <div class="meta"><span>予告 <b>09:55</b></span><span>スタート <b>10:00</b></span><span>タイムリミット <b>15:00</b></span><span>距離 <b>11.5NM</b></span><span>参加 <b>22艇</b></span></div>
+</header>
+
+<nav class="toc" aria-label="セクション">
+  <a href="#keys">要点</a><a href="#time">当日の流れ</a><a href="#wind">風とセール</a><a href="#course">コース</a><a href="#tactics">戦術</a><a href="#rating">ライバル</a><a href="#club">クラブ対抗</a><a href="#check">チェック</a>
+</nav>
+
+<section id="keys">
+  <h2><span class="no">01</span>最初に押さえる5点</h2>
+  <div class="alert"><strong>乗員登録書の締切は 10/30（金）17:00</strong><br>宛先 sorc@jsaf.or.jp。乗員を変える場合は当日 07:55 までにメールで届け出る。<span class="src">SI 7.3–7.4</span></div>
+  <div class="keys" style="margin-top:12px">
+    <div class="key"><div><b>09:45 までに海上確認。</b>本部船「えぼし V」（紺のハル・EYC 旗）の船尾側を、本部船が右に見える向きで通過する。<span class="src">SI 16.1</span></div></div>
+    <div class="key"><div><b>勝負はリーチングで決まる。</b>上りは短い1本だけ。烏帽子岩まで往復する約5.1NMずつのリーチで、セール選びと艇速の維持が最優先。</div></div>
+    <div class="key"><div><b>数字旗は予告信号の前に上がる。</b>旗1は北寄りの風、旗2は南寄りの風。マークの回り方とタックの攻防が変わる。<span class="src">SI 8.2</span></div></div>
+    <div class="key"><div><b>10:10 を過ぎると DNS、15:00 を過ぎると DNF。</b>微風なら烏帽子岩付近でのコース短縮も想定する。<span class="src">SI 10.3 · 12 · 13</span></div></div>
+    <div class="key"><div><b>クラブ対抗では完走を優先。</b>無理な交差やマークでの接触で DNF や DSQ にならないこと。</div></div>
+  </div>
+</section>
+
+<section id="time">
+  <h2><span class="no">02</span>当日の流れ</h2>
+  <ol class="timeline">
+    <li><time>〜07:55</time><div>乗員を変える場合はメールで届け出る <span class="src">SI 7.4</span></div></li>
+    <li class="hot"><time>08:00</time><div>LINE 公式掲示板で帆走指示書の変更を確認。レース本部を江の島ヨットクラブに開設（TEL 0466-22-0261） <span class="src">SI 2.1 · 21.2</span></div></li>
+    <li><time>〜09:15</time><div>海面に到着。風を測り、ラインを確認し、試し走りをする <span class="guess">（推奨）</span></div></li>
+    <li class="hot"><time>09:45</time><div>海上確認の締切 <span class="src">SI 16.1</span></div></li>
+    <li><time>09:55</time><div>予告信号（外洋湘南旗）。数字旗はもう上がっている</div></li>
+    <li class="hot"><time>10:00</time><div>スタート（RRS 26：5-4-1-0）</div></li>
+    <li><time>10:10</time><div>この時刻を過ぎてスタートした艇は DNS</div></li>
+    <li><time>15:00</time><div>タイムリミット</div></li>
+    <li><time>FIN後</time><div>抗議する場合は<b>すぐ運営艇に伝える</b>。審問要求はレース終了後90分以内に本部へ <span class="src">SI 15</span></div></li>
+  </ol>
+  <p class="note">乗せる物：電話2台以上（SI 16.3）、LINE に参加済みのスマホ（ニックネームは アスナロ-6737-イニシャル）、ハンドベアリングコンパス。アスナロはコモドア艇ではないので、クラブ旗の掲揚は不要です。</p>
+</section>
+
+<section id="wind">
+  <h2><span class="no">03</span>風向とレグ角度</h2>
+  <p>当日朝の真風向を選ぶと、往路と復路の真風角（TWA）とセールの見当を表示します。</p>
+  <div class="instr">
+    <div>
+      <label id="dirlabel">真風向（風が吹いてくる方位）</label>
+      <div class="dirs" role="group" aria-labelledby="dirlabel" id="dirs"></div>
+    </div>
+    <div class="flagline" id="flagline"></div>
+    <div class="readout">
+      <div class="leg"><div class="h">往路 → 烏帽子岩（301°・約5.1NM）</div><div class="twa" id="outTwa"></div><div class="tack" id="outTack"></div><div class="sail" id="outSail"></div></div>
+      <div class="leg"><div class="h">復路 → フィニッシュ（121°・約5.1NM）</div><div class="twa" id="retTwa"></div><div class="tack" id="retTack"></div><div class="sail" id="retSail"></div></div>
+    </div>
+    <p class="note">方位は、スタート位置 35°16.000′N 139°30.000′E（SI 8.1）と、烏帽子岩を 35°18.6′N 139°24.6′E と仮定した値からの計算です（推測です。海図で要確認）。セールの見当も推測です。数字旗は東風や西風のときにどちらになるか読めません。最終的にはレース委員会が決めます。</p>
+  </div>
+</section>
+
+<section id="course">
+  <h2><span class="no">04</span>コース</h2>
+  <div class="course">
+    <div class="cbox">
+      <h3><span class="flag f1" aria-hidden="true"><i></i></span>数字旗1 · 北寄り</h3>
+      <svg viewBox="0 0 300 150" role="img" aria-label="数字旗1のコース図">
+        <rect x="0" y="0" width="300" height="16" fill="var(--line)"/>
+        <path d="M40 40 L30 30 L50 30 Z" fill="var(--muted)"/>
+        <ellipse cx="150" cy="26" rx="22" ry="7" fill="var(--ok)" opacity=".5"/>
+        <path d="M262 112 C262 80 255 60 235 56 L70 95 C30 100 20 70 38 52 C50 44 60 44 70 46 L262 92" fill="none" stroke="var(--sea)" stroke-width="2.5"/>
+        <path d="M236 48 l6 12 h-12 Z" fill="var(--mark)"/>
+        <path d="M268 58 l6 12 h-12 Z" fill="var(--mark)"/>
+        <path d="M232 108 l6 12 h-12 Z" fill="var(--mark)"/>
+        <rect x="262" y="104" width="10" height="16" rx="5" fill="var(--surface)" stroke="var(--ink)"/>
+        <path d="M285 30 v20 m-5 -6 l5 6 l5 -6" stroke="var(--sea)" stroke-width="3" fill="none"/>
+        <text x="148" y="140" font-size="11" fill="var(--muted)" text-anchor="middle">往路と復路が8の字に交差</text>
+        <text x="30" y="24" font-size="10" fill="var(--ink)">烏帽子岩</text>
+        <text x="150" y="44" font-size="10" fill="var(--ink)" text-anchor="middle">江ノ島</text>
+      </svg>
+      <ul>
+        <li>上マークは<b>反時計回り</b>（ポートラウンディング）</li>
+        <li>烏帽子岩は<b>時計回り</b></li>
+        <li>往路はスターボード、復路はポート。<b>交差点では往路の艇が権利艇</b></li>
+      </ul>
+    </div>
+    <div class="cbox">
+      <h3><span class="flag f2" aria-hidden="true"><i></i></span>数字旗2 · 南寄り</h3>
+      <svg viewBox="0 0 300 150" role="img" aria-label="数字旗2のコース図">
+        <rect x="0" y="0" width="300" height="16" fill="var(--line)"/>
+        <path d="M40 40 L30 30 L50 30 Z" fill="var(--muted)"/>
+        <ellipse cx="150" cy="26" rx="22" ry="7" fill="var(--ok)" opacity=".5"/>
+        <path d="M240 82 C250 100 250 125 225 128 L50 88 C30 80 25 55 40 45 C55 38 70 40 90 42 L222 70" fill="none" stroke="var(--sea)" stroke-width="2.5"/>
+        <path d="M218 112 l6 12 h-12 Z" fill="var(--mark)"/>
+        <path d="M222 54 l6 12 h-12 Z" fill="var(--mark)"/>
+        <path d="M260 76 l6 -12 h-12 Z" fill="var(--mark)"/>
+        <rect x="220" y="74" width="10" height="16" rx="5" fill="var(--surface)" stroke="var(--ink)"/>
+        <path d="M285 50 v-20 m-5 6 l5 -6 l5 6" stroke="var(--sea)" stroke-width="3" fill="none"/>
+        <text x="148" y="146" font-size="11" fill="var(--muted)" text-anchor="middle">往路は南側、復路は北側。交差なし</text>
+        <text x="30" y="24" font-size="10" fill="var(--ink)">烏帽子岩</text>
+        <text x="150" y="44" font-size="10" fill="var(--ink)" text-anchor="middle">江ノ島</text>
+      </svg>
+      <ul>
+        <li>上マークは<b>時計回り</b>（スターボードラウンディング）</li>
+        <li>最後のアプローチは<b>ポートのレイライン</b>。スターボード艇に注意</li>
+        <li>烏帽子岩は時計回り</li>
+      </ul>
+    </div>
+  </div>
+  <p class="note">模式図です（コース図 ver03 をもとに作成。縮尺は正確ではありません）。スタートは本部船のオレンジ旗、フィニッシュは青旗で、どちらも本部船を右に見て通過します <span class="src">SI 10.2 · 11</span>。マークはすべてオレンジ色の三角ブイです。</p>
+</section>
+
+<section id="tactics">
+  <h2><span class="no">05</span>レグごとの戦術</h2>
+  <h3>スタート</h3>
+  <ul>
+    <li>上りが短いので、混雑を避けて<b>きれいな風で走り出す</b>ことを優先する。修正タイムで争うレースなので、着順にこだわりすぎない。</li>
+    <li>予告信号の前に両端でヘッドツーウインドし、ラインのバイアスを測る。</li>
+    <li>旗1：上マークを左回りにベアするので、ピン寄りからポートで上マークへのレイラインに乗る形が有利になりやすい <span class="guess">（推測です）</span>。</li>
+    <li>旗2：最後はポートのレイラインになる。早めにレイラインに乗るか、少しオーバースタンドして入る。</li>
+    <li>レーティングの近い Xpedition、Starboard Jr、Zephyr、TIBRON とは、風を取り合わない位置を選ぶ。</li>
+  </ul>
+  <h3>上りレグ</h3>
+  <ul><li>タックは最小限にする。上マークを回る前に、次のセールのセットを準備しておく。</li></ul>
+  <h3>往路リーチ</h3>
+  <ul>
+    <li>北寄りの風のときは、<b>江ノ島の南に出る風の影を避けて沖側を保つ</b> <span class="guess">（推測です）</span>。</li>
+    <li>陸から吹く風はブローと振れが大きい。ブローで下り、ラルで上る <span class="guess">（推測です）</span>。</li>
+    <li>南寄りの風はうねりが出る。波に乗れる角度を使う。</li>
+    <li>ヒールを一定に保ち、クルーの体重は風上側の外へ。トリマーの交代も計画しておく。</li>
+  </ul>
+  <h3>烏帽子岩の回航（時計回り）</h3>
+  <ul>
+    <li><b>姥島の周辺は岩礁群です。</b>岩から十分に離す <span class="guess">（距離は海図で要確認）</span>。</li>
+    <li>ワイドに入り、タイトに出る。次のレグの高さを残す。</li>
+    <li><b>コース短縮の見張りを置く</b>：青旗と S 旗。短縮の場合は、運営艇の青旗と烏帽子岩の頂上の間がフィニッシュライン <span class="src">SI 13</span>。</li>
+  </ul>
+  <h3>復路</h3>
+  <ul>
+    <li>旗1のときは、交差点で往路のスターボード艇を早めに避ける。</li>
+    <li>フィニッシュは青旗の本部船を右に見て通過する。手前で、近い側のライン端を判断する。</li>
+    <li>抗議する場合は、フィニッシュ後すぐに運営艇へ伝える <span class="src">SI 15.2</span>。</li>
+  </ul>
+</section>
+
+<section id="rating">
+  <h2><span class="no">06</span>ライバルと修正時間</h2>
+  <p>アスナロの所要時間を変えると、各艇との勝ち負けの時間差が変わります。タイムオンタイムで計算し、同タイムならレーティングの小さい艇が上位です <span class="src">SI 14.2</span>。</p>
+  <div class="slider">
+    <label for="hrs">アスナロの所要時間</label>
+    <input type="range" id="hrs" min="90" max="300" step="5" value="150">
+    <output id="hrsOut" for="hrs">2:30</output>
+  </div>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>艇名</th><th>艇種</th><th style="text-align:right">TCF</th><th style="text-align:right">時間差</th><th>意味</th></tr></thead>
+      <tbody id="rtbl"></tbody>
+    </table>
+  </div>
+  <p class="note">「この差まで遅れて勝ち」は、相手のフィニッシュからこの時間内にアスナロがフィニッシュすれば勝てる、という意味です。「この差より先で勝ち」は、相手よりこの時間以上先にフィニッシュする必要がある、という意味です。太字の艇が直接のライバルです。</p>
+</section>
+
+<section id="club">
+  <h2><span class="no">07</span>クラブ対抗（EYC）</h2>
+  <p>EYC からは6艇が参加：Maupiti（コモドア艇・0.829）、<b>アスナロ（0.783）</b>、ARIADNE（0.767）、PEANUTS（0.657）、Omoo（0.653）、CENTRO（0.653）。</p>
+  <p>クラブの得点は、各クラブの上位3艇または上位5艇の合計です <span class="src">SI 14.4</span>。どちらを採るかは書かれていません <span class="guess">（要確認）</span>。アスナロは得点に入る上位艇になる可能性が高いので、<b>確実に完走して点を取る</b>ことを優先します。</p>
+</section>
+
+<section id="check">
+  <h2><span class="no">08</span>チェックリスト</h2>
+  <ul class="check" id="checklist">
+    <li><label><input type="checkbox" id="c1"><span>乗員登録書を提出した（10/30 17:00 締切）</span></label></li>
+    <li><label><input type="checkbox" id="c2"><span>予報から、数字旗1と2のどちらになりそうか予想した</span></label></li>
+    <li><label><input type="checkbox" id="c3"><span>往路と復路のセールの組み合わせをクルーと共有した</span></label></li>
+    <li><label><input type="checkbox" id="c4"><span>烏帽子岩周辺の岩礁と定置網を海図で確認した</span></label></li>
+    <li><label><input type="checkbox" id="c5"><span>LINE オープンチャットに参加し、ニックネームを設定した</span></label></li>
+    <li><label><input type="checkbox" id="c6"><span>電話2台以上・防水ケース・予備バッテリーを積んだ</span></label></li>
+    <li><label><input type="checkbox" id="c7"><span>当日 08:00 に帆走指示書の変更を確認した</span></label></li>
+    <li><label><input type="checkbox" id="c8"><span>09:45 までに海上確認を受けた</span></label></li>
+    <li><label><input type="checkbox" id="c9"><span>防寒具・ライフジャケット・落水対策を準備した</span></label></li>
+  </ul>
+  <p class="note">チェックはこの端末のブラウザにだけ保存されます。</p>
+</section>
+
+<footer>
+  出典：レース公示 Ver.1（2026/10/1）、帆走指示書 Ver.1（2026/10/27）、エントリーリスト（2026/10/20 確定）、コース図 ver03。「推測です」「要確認」の付いた項目は書類にない内容です。風と海況は当日の観察を最優先してください。
+</footer>
+</div>
+
+<script>
+(function(){
+  var OUT=301, RET=121;
+  var dirs=[["N",0],["NNE",22.5],["NE",45],["ENE",67.5],["E",90],["ESE",112.5],["SE",135],["SSE",157.5],["S",180],["SSW",202.5],["SW",225],["WSW",247.5],["W",270],["WNW",292.5],["NW",315],["NNW",337.5]];
+  var jp={N:"北",NNE:"北北東",NE:"北東",ENE:"東北東",E:"東",ESE:"東南東",SE:"南東",SSE:"南南東",S:"南",SSW:"南南西",SW:"南西",WSW:"西南西",W:"西",WNW:"西北西",NW:"北西",NNW:"北北西"};
+  function twa(w,h){var d=((w-h)%360+540)%360-180;return {a:Math.abs(Math.round(d)),side:d>0?"スターボード":"ポート"};}
+  function sail(a){
+    if(a<45)return "上り（クローズホールド）。レイラインを読む";
+    if(a<70)return "ジブでクローズリーチ";
+    if(a<95)return "ジブリーチ（コードゼロがあれば有効）";
+    if(a<140)return "アシメ／スピンでリーチ〜ブロードリーチ";
+    if(a<165)return "ダウンウインド。ジャイブで角度を調整";
+    return "真追っ手。ジャイブで角度をつける";
+  }
+  var box=document.getElementById("dirs");
+  dirs.forEach(function(d){
+    var b=document.createElement("button");b.type="button";b.textContent=d[0];b.setAttribute("aria-pressed","false");b.title=jp[d[0]]+"の風";
+    b.addEventListener("click",function(){select(d)});box.appendChild(b);d.btn=b;
+  });
+  function select(d){
+    dirs.forEach(function(x){x.btn.setAttribute("aria-pressed",x===d?"true":"false")});
+    var w=d[1],o=twa(w,OUT),r=twa(w,RET);
+    document.getElementById("outTwa").innerHTML=o.a+"°<span> TWA</span>";
+    document.getElementById("retTwa").innerHTML=r.a+"°<span> TWA</span>";
+    document.getElementById("outTack").textContent=o.side+"タック";
+    document.getElementById("retTack").textContent=r.side+"タック";
+    document.getElementById("outSail").textContent=sail(o.a);
+    document.getElementById("retSail").textContent=sail(r.a);
+    var fl=document.getElementById("flagline");
+    if(w===90||w===270){fl.innerHTML=jp[d[0]]+"の風："+"<span>数字旗はどちらもあり得ます</span>";}
+    else{var one=(w>270||w<90);fl.innerHTML='<span class="flag '+(one?"f1":"f2")+'" aria-hidden="true"><i></i></span><span>'+jp[d[0]]+"の風 → 数字旗"+(one?"1（上マークは反時計回り）":"2（上マークは時計回り）")+"の見込み</span>";}
+  }
+  select(dirs[0]);
+
+  var A=0.783;
+  var boats=[
+    ["Maupiti","Cookson12m",0.829,"EYC・コモドア"],["Constellation","IMX40",0.819],["BLUE LILY","J111 Mod",0.808],
+    ["Xpedition","XP-38",0.791,"",1],["Starboard Jr","N/M36",0.784,"",1],["アスナロ","J/V35CR",0.783,"me"],
+    ["Zephyr","X-35",0.777,"",1],["TIBRON","SALONA37",0.777,"",1],["QUADRON / WAVYHOT / Kaientai","Y-33S",0.771],
+    ["PLUMERIA","J99",0.770],["ARIADNE","SEAM 33",0.767,"EYC"],["VISCONTINA Ⅱ","XP-33",0.765],["Luminous Ⅱ","First 34.7",0.755],
+    ["JeReviens","Dufour 334",0.740],["寿限無 / PANDORA Ⅴ","First 31.7",0.715],["PEANUTS","YAMAHA-25ML(OB)",0.657,"EYC"],
+    ["Omoo / CENTRO","YAMAHA-25ML",0.653,"EYC"],["SION","LIBECIO26",0.653]
+  ];
+  function fmt(sec){sec=Math.round(Math.abs(sec));var m=Math.floor(sec/60),s=sec%60;return m+"分"+(s<10?"0":"")+s+"秒";}
+  function render(){
+    var mins=+document.getElementById("hrs").value;
+    document.getElementById("hrsOut").textContent=Math.floor(mins/60)+":"+("0"+mins%60).slice(-2);
+    var T=mins*60, html="";
+    boats.forEach(function(b){
+      var me=b[3]==="me", diff=T*(1-A/b[2]);
+      var cls=me?"me":(b[4]?"rival":"");
+      var tag=(b[3]&&!me)?' <span class="eyc">'+b[3]+'</span>':"";
+      var cell,mean;
+      if(me){cell="—";mean="基準";}
+      else if(diff>=0){cell=fmt(diff);mean='<span class="pill win">この差まで遅れて勝ち</span>';}
+      else{cell=fmt(diff);mean='<span class="pill lose">この差より先で勝ち</span>';}
+      html+='<tr class="'+cls+'"><td>'+b[0]+tag+'</td><td>'+b[1]+'</td><td class="n">'+b[2].toFixed(3)+'</td><td class="n">'+cell+'</td><td>'+mean+'</td></tr>';
+    });
+    document.getElementById("rtbl").innerHTML=html;
+  }
+  document.getElementById("hrs").addEventListener("input",render);render();
+
+  document.querySelectorAll("#checklist input").forEach(function(c){
+    try{c.checked=localStorage.getItem("ck-"+c.id)==="1";}catch(e){}
+    c.addEventListener("change",function(){try{localStorage.setItem("ck-"+c.id,c.checked?"1":"0");}catch(e){}});
+  });
+})();
+</script>
