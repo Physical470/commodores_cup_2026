@@ -124,8 +124,34 @@ html{scroll-behavior:smooth}
 </header>
 
 <nav class="toc" aria-label="セクション">
-  <a href="#keys">要点</a><a href="#time">当日の流れ</a><a href="#wind">風とセール</a><a href="#course">コース</a><a href="#tactics">戦術</a><a href="#rating">ライバル</a><a href="#club">クラブ対抗</a><a href="#check">チェック</a>
+  <a href="#fcst">風予報</a><a href="#keys">要点</a><a href="#time">当日の流れ</a><a href="#wind">風とセール</a><a href="#course">コース</a><a href="#tactics">戦術</a><a href="#rating">ライバル</a><a href="#club">クラブ対抗</a><a href="#check">チェック</a>
 </nav>
+
+<section id="fcst">
+  <h2><span class="no">00</span>風予報と作戦</h2>
+  <p class="note">Windguru「Enoshima Higashihama」、GFS 13km（11/1 18 UTC 発表）を 11/2 10:30 に確認。時刻は日本時間。風向は風が吹いてくる方位に直しています。</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>11/3</th><th style="text-align:right">風速</th><th style="text-align:right">ガスト</th><th>風向</th><th>往路 TWA</th><th>復路 TWA</th><th style="text-align:right">気温</th></tr></thead>
+      <tbody>
+        <tr><td class="n">06:00</td><td class="n">8kn</td><td class="n">11</td><td>NNE</td><td>79°</td><td>101°</td><td class="n">17℃</td></tr>
+        <tr class="me"><td class="n">09:00</td><td class="n">14kn</td><td class="n">15</td><td>NNE</td><td>79° ジブリーチ</td><td>101° スピン</td><td class="n">17℃</td></tr>
+        <tr class="me"><td class="n">12:00</td><td class="n">9kn</td><td class="n">9</td><td>NE</td><td>104° スピン</td><td>76° ジブリーチ</td><td class="n">18℃</td></tr>
+        <tr><td class="n">15:00</td><td class="n">8kn</td><td class="n">7</td><td>ESE</td><td>171° ラン</td><td><b>9° 上り</b></td><td class="n">19℃</td></tr>
+        <tr><td class="n">18:00</td><td class="n">11kn</td><td class="n">10</td><td>SE</td><td>—</td><td>—</td><td class="n">18℃</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">うねりは南南東から 0.7〜0.8m・周期 11〜12 秒。雨の予報はなく、低い雲が多い。</p>
+  <div class="keys" style="margin-top:12px">
+    <div class="key"><div><b>数字旗1の見込み。</b>10:00 ごろは NNE の 12〜14kn 前後（09 時と 12 時の予報の間）。</div></div>
+    <div class="key"><div><b>風は時計回りに振れながら弱まる。</b>NNE 14kn → NE 9kn → ESE 8kn。15 時ごろには復路が完全な上りになるので、<b>前半で速く走って早くフィニッシュする</b>ことが最大の武器。</div></div>
+    <div class="key"><div><b>予想所要時間は約 1:50〜2:15、フィニッシュは 11:50〜12:15 ごろ</b>（推測です）。回航の時刻によって往路と復路のセールが入れ替わるので、回航時の風向を見て復路のセールを決める。</div></div>
+    <div class="key"><div><b>復路は NE のうちにラムラインより少し北側で高さを貯める。</b>風が E に振れても、フィニッシュへの角度が楽になる <span class="guess">（推測です）</span>。</div></div>
+    <div class="key"><div><b>小さいレーティングの艇には不利な予報。</b>後半ほど風が弱まるため。逆に Maupiti や Constellation などの大型艇は、修正タイムで抜けるチャンスがある。</div></div>
+  </div>
+  <p class="note">1 日前の GFS モデル 1 本だけの予報です。前夜と当日朝にもう一度確認してください。</p>
+</section>
 
 <section id="keys">
   <h2><span class="no">01</span>最初に押さえる5点</h2>
@@ -261,8 +287,8 @@ html{scroll-behavior:smooth}
   <p>アスナロの所要時間を変えると、各艇との勝ち負けの時間差が変わります。タイムオンタイムで計算し、同タイムならレーティングの小さい艇が上位です <span class="src">SI 14.2</span>。</p>
   <div class="slider">
     <label for="hrs">アスナロの所要時間</label>
-    <input type="range" id="hrs" min="90" max="300" step="5" value="150">
-    <output id="hrsOut" for="hrs">2:30</output>
+    <input type="range" id="hrs" min="90" max="300" step="5" value="120">
+    <output id="hrsOut" for="hrs">2:00</output>
   </div>
   <div class="tbl">
     <table>
@@ -332,7 +358,7 @@ html{scroll-behavior:smooth}
     if(w===90||w===270){fl.innerHTML=jp[d[0]]+"の風："+"<span>数字旗はどちらもあり得ます</span>";}
     else{var one=(w>270||w<90);fl.innerHTML='<span class="flag '+(one?"f1":"f2")+'" aria-hidden="true"><i></i></span><span>'+jp[d[0]]+"の風 → 数字旗"+(one?"1（上マークは反時計回り）":"2（上マークは時計回り）")+"の見込み</span>";}
   }
-  select(dirs[0]);
+  select(dirs[1]);
 
   var A=0.783;
   var boats=[
